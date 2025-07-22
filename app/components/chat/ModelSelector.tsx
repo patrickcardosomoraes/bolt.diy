@@ -236,8 +236,8 @@ export const ModelSelector = ({
     return (
       <div className="mb-2 p-4 rounded-lg border border-bolt-elements-borderColor bg-bolt-elements-prompt-background text-bolt-elements-textPrimary">
         <p className="text-center">
-          No providers are currently enabled. Please enable at least one provider in the settings to start using the
-          chat.
+          Nenhum provedor está ativo no momento. Por favor, ative pelo menos um provedor nas configurações para começar
+          a usar o chat.
         </p>
       </div>
     );
@@ -269,7 +269,7 @@ export const ModelSelector = ({
           tabIndex={0}
         >
           <div className="flex items-center justify-between">
-            <div className="truncate">{provider?.name || 'Select provider'}</div>
+            <div className="truncate">{provider?.name || 'Selecionar provedor'}</div>
             <div
               className={classNames(
                 'i-ph:caret-down w-4 h-4 text-bolt-elements-textSecondary opacity-75',
@@ -292,7 +292,7 @@ export const ModelSelector = ({
                   type="text"
                   value={providerSearchQuery}
                   onChange={(e) => setProviderSearchQuery(e.target.value)}
-                  placeholder="Search providers..."
+                  placeholder="Buscar provedores..."
                   className={classNames(
                     'w-full pl-2 py-1.5 rounded-md text-sm',
                     'bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor',
@@ -302,7 +302,7 @@ export const ModelSelector = ({
                   )}
                   onClick={(e) => e.stopPropagation()}
                   role="searchbox"
-                  aria-label="Search providers"
+                  aria-label="Buscar provedores"
                 />
                 <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
                   <span className="i-ph:magnifying-glass text-bolt-elements-textTertiary" />
@@ -327,7 +327,7 @@ export const ModelSelector = ({
               )}
             >
               {filteredProviders.length === 0 ? (
-                <div className="px-3 py-2 text-sm text-bolt-elements-textTertiary">No providers found</div>
+                <div className="px-3 py-2 text-sm text-bolt-elements-textTertiary">Nenhum provedor encontrado</div>
               ) : (
                 filteredProviders.map((providerOption, index) => (
                   <div
@@ -396,7 +396,7 @@ export const ModelSelector = ({
           tabIndex={0}
         >
           <div className="flex items-center justify-between">
-            <div className="truncate">{modelList.find((m) => m.name === model)?.label || 'Select model'}</div>
+            <div className="truncate">{modelList.find((m) => m.name === model)?.label || 'Selecionar modelo'}</div>
             <div
               className={classNames(
                 'i-ph:caret-down w-4 h-4 text-bolt-elements-textSecondary opacity-75',
@@ -431,11 +431,12 @@ export const ModelSelector = ({
                     )}
                   >
                     <span className="i-ph:gift text-xs" />
-                    Free models only
+                    Apenas modelos gratuitos
                   </button>
                   {showFreeModelsOnly && (
                     <span className="text-xs text-bolt-elements-textTertiary">
-                      {filteredModels.length} free model{filteredModels.length !== 1 ? 's' : ''}
+                      {filteredModels.length} modelo{filteredModels.length !== 1 ? 's' : ''} gratuito
+                      {filteredModels.length !== 1 ? 's' : ''}
                     </span>
                   )}
                 </div>
@@ -448,7 +449,7 @@ export const ModelSelector = ({
                   type="text"
                   value={modelSearchQuery}
                   onChange={(e) => setModelSearchQuery(e.target.value)}
-                  placeholder="Search models..."
+                  placeholder="Buscar modelos..."
                   className={classNames(
                     'w-full pl-2 py-1.5 rounded-md text-sm',
                     'bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor',
@@ -458,7 +459,7 @@ export const ModelSelector = ({
                   )}
                   onClick={(e) => e.stopPropagation()}
                   role="searchbox"
-                  aria-label="Search models"
+                  aria-label="Buscar modelos"
                 />
                 <div className="absolute left-2.5 top-1/2 -translate-y-1/2">
                   <span className="i-ph:magnifying-glass text-bolt-elements-textTertiary" />
@@ -483,10 +484,10 @@ export const ModelSelector = ({
               )}
             >
               {modelLoading === 'all' || modelLoading === provider?.name ? (
-                <div className="px-3 py-2 text-sm text-bolt-elements-textTertiary">Loading...</div>
+                <div className="px-3 py-2 text-sm text-bolt-elements-textTertiary">Carregando...</div>
               ) : filteredModels.length === 0 ? (
                 <div className="px-3 py-2 text-sm text-bolt-elements-textTertiary">
-                  {showFreeModelsOnly ? 'No free models found' : 'No models found'}
+                  {showFreeModelsOnly ? 'Nenhum modelo gratuito encontrado' : 'Nenhum modelo encontrado'}
                 </div>
               ) : (
                 filteredModels.map((modelOption, index) => (
@@ -516,7 +517,7 @@ export const ModelSelector = ({
                     <div className="flex items-center justify-between">
                       <span>{modelOption.label}</span>
                       {isModelLikelyFree(modelOption, provider?.name) && (
-                        <span className="i-ph:gift text-xs text-purple-400 ml-2" title="Free model" />
+                        <span className="i-ph:gift text-xs text-purple-400 ml-2" title="Modelo gratuito" />
                       )}
                     </div>
                   </div>

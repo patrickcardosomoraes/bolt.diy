@@ -67,7 +67,9 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
   return (
     <div
       className={classNames(
-        'relative bg-bolt-elements-background-depth-2 backdrop-blur p-3 rounded-lg border border-bolt-elements-borderColor relative w-full max-w-chat mx-auto z-prompt',
+        'relative bg-bolt-elements-bg-depth-1 border border-bolt-elements-borderColor rounded-xl shadow-lg w-full max-w-chat mx-auto z-prompt',
+        'transition-all duration-200 ease-out',
+        'hover:border-bolt-elements-borderColorActive hover:shadow-xl',
 
         /*
          * {
@@ -166,15 +168,14 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
           </button>
         </div>
       )}
-      <div
-        className={classNames('relative shadow-xs border border-bolt-elements-borderColor backdrop-blur rounded-lg')}
-      >
+      <div className="relative">
         <textarea
           ref={props.textareaRef}
           className={classNames(
-            'w-full pl-4 pt-4 pr-16 outline-none resize-none text-bolt-elements-textPrimary placeholder-bolt-elements-textTertiary bg-transparent text-sm',
-            'transition-all duration-200',
-            'hover:border-bolt-elements-focus',
+            'w-full px-4 py-4 pr-16 outline-none resize-none bg-transparent',
+            'text-bolt-elements-textPrimary placeholder-bolt-elements-textTertiary',
+            'text-base leading-relaxed',
+            'focus:ring-0 transition-all duration-200',
           )}
           onDragEnter={(e) => {
             e.preventDefault();
@@ -236,7 +237,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
             minHeight: props.TEXTAREA_MIN_HEIGHT,
             maxHeight: props.TEXTAREA_MAX_HEIGHT,
           }}
-          placeholder={props.chatMode === 'build' ? 'How can Bolt help you today?' : 'What would you like to discuss?'}
+          placeholder={props.chatMode === 'build' ? 'Como posso ajudar você hoje?' : 'O que você gostaria de discutir?'}
           translate="no"
         />
         <ClientOnly>
@@ -258,28 +259,37 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
             />
           )}
         </ClientOnly>
-        <div className="flex justify-between items-center text-sm p-4 pt-2">
-          <div className="flex gap-1 items-center">
+        <div className="flex justify-between items-center p-4">
+          <div className="flex gap-2 items-center">
             <ColorSchemeDialog designScheme={props.designScheme} setDesignScheme={props.setDesignScheme} />
             <McpTools />
-            <IconButton title="Upload file" className="transition-all" onClick={() => props.handleFileUpload()}>
-              <div className="i-ph:paperclip text-xl"></div>
-            </IconButton>
-            <IconButton
-              title="Enhance prompt"
+            <button
+              title="Enviar arquivo"
+              className="p-2 rounded-lg hover:bg-bolt-elements-bg-depth-2 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary transition-all duration-200"
+              onClick={() => props.handleFileUpload()}
+            >
+              <div className="i-ph:paperclip text-lg"></div>
+            </button>
+            <button
+              title="Melhorar prompt"
               disabled={props.input.length === 0 || props.enhancingPrompt}
-              className={classNames('transition-all', props.enhancingPrompt ? 'opacity-100' : '')}
+              className={classNames(
+                'p-2 rounded-lg transition-all duration-200',
+                props.input.length === 0 || props.enhancingPrompt
+                  ? 'text-bolt-elements-textTertiary cursor-not-allowed'
+                  : 'hover:bg-bolt-elements-bg-depth-2 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
+              )}
               onClick={() => {
                 props.enhancePrompt?.();
-                toast.success('Prompt enhanced!');
+                toast.success('Prompt melhorado!');
               }}
             >
               {props.enhancingPrompt ? (
-                <div className="i-svg-spinners:90-ring-with-bg text-bolt-elements-loader-progress text-xl animate-spin"></div>
+                <div className="i-svg-spinners:90-ring-with-bg text-bolt-elements-loader-progress text-lg animate-spin"></div>
               ) : (
-                <div className="i-bolt:stars text-xl"></div>
+                <div className="i-bolt:stars text-lg"></div>
               )}
-            </IconButton>
+            </button>
 
             <SpeechRecognitionButton
               isListening={props.isListening}
@@ -289,7 +299,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
             />
             {props.chatStarted && (
               <IconButton
-                title="Discuss"
+                title="Discutir"
                 className={classNames(
                   'transition-all flex items-center gap-1 px-1.5',
                   props.chatMode === 'discuss'
@@ -301,11 +311,11 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
                 }}
               >
                 <div className={`i-ph:chats text-xl`} />
-                {props.chatMode === 'discuss' ? <span>Discuss</span> : <span />}
+                {props.chatMode === 'discuss' ? <span>Discutir</span> : <span />}
               </IconButton>
             )}
             <IconButton
-              title="Model Settings"
+              title="Configurações do Modelo"
               className={classNames('transition-all flex items-center gap-1', {
                 'bg-bolt-elements-item-backgroundAccent text-bolt-elements-item-contentAccent':
                   props.isModelSettingsCollapsed,
@@ -322,7 +332,7 @@ export const ChatBox: React.FC<ChatBoxProps> = (props) => {
           {props.input.length > 3 ? (
             <div className="text-xs text-bolt-elements-textTertiary">
               Use <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Shift</kbd> +{' '}
-              <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Return</kbd> a new line
+              <kbd className="kdb px-1.5 py-0.5 rounded bg-bolt-elements-background-depth-2">Enter</kbd> para nova linha
             </div>
           ) : null}
           <SupabaseConnection />

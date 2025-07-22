@@ -1,12 +1,12 @@
 import React from 'react';
 
 const EXAMPLE_PROMPTS = [
-  { text: 'Create a mobile app about bolt.diy' },
-  { text: 'Build a todo app in React using Tailwind' },
-  { text: 'Build a simple blog using Astro' },
-  { text: 'Create a cookie consent form using Material UI' },
-  { text: 'Make a space invaders game' },
-  { text: 'Make a Tic Tac Toe game in html, css and js only' },
+  { text: 'Crie um app móvel sobre tecnologia' },
+  { text: 'Construa um app de tarefas em React com Tailwind' },
+  { text: 'Crie um blog simples usando Astro' },
+  { text: 'Crie um formulário de consentimento de cookies com Material UI' },
+  { text: 'Faça um jogo space invaders' },
+  { text: 'Faça um jogo da velha em html, css e js apenas' },
 ];
 
 export function ExamplePrompts(sendMessage?: { (event: React.UIEvent, messageInput?: string): void | undefined }) {
@@ -25,9 +25,10 @@ export function ExamplePrompts(sendMessage?: { (event: React.UIEvent, messageInp
               onClick={(event) => {
                 sendMessage?.(event, examplePrompt.text);
               }}
-              className="border border-bolt-elements-borderColor rounded-full bg-gray-50 hover:bg-gray-100 dark:bg-gray-950 dark:hover:bg-gray-900 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary px-3 py-1 text-xs transition-theme"
+              className="group relative px-6 py-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary text-sm font-medium transition-all duration-300 hover:scale-105 hover:rotate-1"
             >
-              {examplePrompt.text}
+              <span className="relative z-10">{examplePrompt.text}</span>
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
             </button>
           );
         })}

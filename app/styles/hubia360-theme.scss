@@ -1,0 +1,241 @@
+/* Hubia360 Modern Theme - Inspired by Lovable */
+
+/* Modern Glassmorphism Effects */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+}
+
+.glass-effect-dark {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+}
+
+/* Modern Button Styles */
+.modern-button-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 4px 6px -1px rgba(99, 102, 241, 0.2),
+    0 2px 4px -1px rgba(99, 102, 241, 0.1);
+}
+
+.modern-button-primary:hover {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 12px -2px rgba(99, 102, 241, 0.3),
+    0 4px 6px -1px rgba(99, 102, 241, 0.2);
+}
+
+.modern-button-secondary {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: var(--bolt-elements-textPrimary);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-button-secondary:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Modern Card Styles */
+.modern-card {
+  background: var(--bolt-elements-bg-depth-1);
+  border: 1px solid var(--bolt-elements-borderColor);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.1),
+    0 1px 2px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.1),
+    0 4px 6px rgba(15, 23, 42, 0.05);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Modern Input Styles */
+.modern-input {
+  background: var(--bolt-elements-bg-depth-2);
+  border: 2px solid var(--bolt-elements-borderColor);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.modern-input:focus {
+  border-color: #6366f1;
+  background: var(--bolt-elements-bg-depth-1);
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.1),
+    0 2px 4px rgba(15, 23, 42, 0.05);
+}
+
+/* Modern Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+/* Modern Chat Bubble */
+.modern-chat-bubble {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 20px;
+  padding: 16px 20px;
+  margin: 8px 0;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-chat-bubble:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.08) 100%);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+/* Modern Sidebar */
+.modern-sidebar {
+  background: linear-gradient(180deg, var(--bolt-elements-bg-depth-1) 0%, var(--bolt-elements-bg-depth-2) 100%);
+  border-right: 1px solid var(--bolt-elements-borderColor);
+  backdrop-filter: blur(20px);
+}
+
+/* Modern Scrollbar */
+.modern-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
+}
+
+/* Modern Animation */
+@keyframes modern-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modern-animate-in {
+  animation: modern-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modern Glow Effect */
+.modern-glow {
+  position: relative;
+}
+
+.modern-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.modern-glow:hover::before {
+  opacity: 0.3;
+}
+
+/* Dark Theme Overrides */
+:root[data-theme='dark'] {
+  .modern-card {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-card:hover {
+    box-shadow:
+      0 10px 25px rgba(0, 0, 0, 0.4),
+      0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-input:focus {
+    box-shadow:
+      0 0 0 4px rgba(139, 92, 246, 0.2),
+      0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Modern Loading Animation */
+.modern-loading {
+  background: linear-gradient(
+    90deg,
+    var(--bolt-elements-bg-depth-2) 25%,
+    var(--bolt-elements-bg-depth-3) 50%,
+    var(--bolt-elements-bg-depth-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: modern-shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes modern-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Modern Badge */
+.modern-badge {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+}

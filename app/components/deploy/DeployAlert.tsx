@@ -88,7 +88,7 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
                           <span className="text-white text-xs">1</span>
                         )}
                       </div>
-                      <span className="ml-2">Build</span>
+                      <span className="ml-2">Construir</span>
                     </div>
 
                     {/* Connector Line */}
@@ -123,7 +123,7 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
                           <span className="text-white text-xs">2</span>
                         )}
                       </div>
-                      <span className="ml-2">Deploy</span>
+                      <span className="ml-2">Implantar</span>
                     </div>
                   </div>
                 </div>
@@ -142,7 +142,7 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
                     rel="noopener noreferrer"
                     className="text-bolt-elements-item-contentAccent hover:underline flex items-center"
                   >
-                    <span className="mr-1">View deployed site</span>
+                    <span className="mr-1">Ver site implantado</span>
                     <div className="i-ph:arrow-square-out"></div>
                   </a>
                 </div>
@@ -172,7 +172,7 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
                     )}
                   >
                     <div className="i-ph:chat-circle-duotone"></div>
-                    Ask Bolt
+                    Ask Hub.IA360
                   </button>
                 )}
                 <button
@@ -185,7 +185,7 @@ export default function DeployChatAlert({ alert, clearAlert, postMessage }: Depl
                     'text-bolt-elements-button-secondary-text',
                   )}
                 >
-                  Dismiss
+                  Dispensar
                 </button>
               </div>
             </motion.div>

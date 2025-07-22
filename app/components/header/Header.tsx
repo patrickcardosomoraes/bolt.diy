@@ -10,17 +10,29 @@ export function Header() {
 
   return (
     <header
-      className={classNames('flex items-center px-4 border-b h-[var(--header-height)]', {
-        'border-transparent': !chat.started,
-        'border-bolt-elements-borderColor': chat.started,
+      className={classNames('flex items-center px-6 border-b h-[var(--header-height)] backdrop-blur-sm', {
+        'border-transparent shadow-sm bg-gradient-to-r from-gray-50/95 via-gray-100/90 to-gray-200/85 dark:bg-gradient-to-r dark:from-gray-900/95 dark:via-gray-800/90 dark:to-gray-900/85':
+          !chat.started,
+        'border-bolt-elements-borderColor shadow-lg bg-gradient-to-r from-white/95 via-gray-50/90 to-gray-100/85 dark:bg-gradient-to-r dark:from-gray-900/95 dark:via-gray-800/90 dark:to-gray-900/85':
+          chat.started,
       })}
     >
-      <div className="flex items-center gap-2 z-logo text-bolt-elements-textPrimary cursor-pointer">
-        <div className="i-ph:sidebar-simple-duotone text-xl" />
-        <a href="/" className="text-2xl font-semibold text-accent flex items-center">
-          {/* <span className="i-bolt:logo-text?mask w-[46px] inline-block" /> */}
-          <img src="/logo-light-styled.png" alt="logo" className="w-[90px] inline-block dark:hidden" />
-          <img src="/logo-dark-styled.png" alt="logo" className="w-[90px] inline-block hidden dark:block" />
+      <div className="flex items-center gap-3 z-logo">
+        <div className="i-ph:sidebar-simple-duotone text-xl text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary transition-colors" />
+        <a
+          href="/"
+          className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent hover:scale-105 transition-transform flex items-center"
+        >
+          <img
+            src="/hubia360-logo.png"
+            alt="Hubia360"
+            className="w-[120px] h-auto inline-block dark:hidden drop-shadow-sm"
+          />
+          <img
+            src="/hubia360-darkmode.png"
+            alt="Hubia360"
+            className="w-[120px] h-auto inline-block hidden dark:block drop-shadow-sm"
+          />
         </a>
       </div>
       {chat.started && ( // Display ChatDescription and HeaderActionButtons only when the chat has started.
