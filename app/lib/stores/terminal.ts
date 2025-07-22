@@ -27,20 +27,31 @@ export class TerminalStore {
   }
   async attachBoltTerminal(terminal: ITerminal) {
     try {
+      console.log('🔗 Conectando Bolt terminal...');
+
       const wc = await this.#webcontainer;
+      console.log('✅ WebContainer obtido, inicializando terminal...');
       await this.#boltTerminal.init(wc, terminal);
+      console.log('✅ Bolt terminal conectado com sucesso');
     } catch (error: any) {
+      console.error('❌ Erro ao conectar Bolt terminal:', error);
       terminal.write(coloredText.red('Failed to spawn bolt shell\n\n') + error.message);
+
       return;
     }
   }
 
   async attachTerminal(terminal: ITerminal) {
     try {
+      console.log('🔗 Conectando terminal adicional...');
+
       const shellProcess = await newShellProcess(await this.#webcontainer, terminal);
       this.#terminals.push({ terminal, process: shellProcess });
+      console.log('✅ Terminal adicional conectado com sucesso');
     } catch (error: any) {
+      console.error('❌ Erro ao conectar terminal adicional:', error);
       terminal.write(coloredText.red('Failed to spawn shell\n\n') + error.message);
+
       return;
     }
   }

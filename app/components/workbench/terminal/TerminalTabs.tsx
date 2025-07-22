@@ -7,7 +7,9 @@ import { themeStore } from '~/lib/stores/theme';
 import { workbenchStore } from '~/lib/stores/workbench';
 import { classNames } from '~/utils/classNames';
 import { Terminal, type TerminalRef } from './Terminal';
+import { TerminalFallback } from './TerminalFallback';
 import { createScopedLogger } from '~/utils/logger';
+import { webcontainer } from '~/lib/webcontainer';
 
 const logger = createScopedLogger('Terminal');
 
@@ -24,6 +26,28 @@ export const TerminalTabs = memo(() => {
 
   const [activeTerminal, setActiveTerminal] = useState(0);
   const [terminalCount, setTerminalCount] = useState(0);
+  const [webContainerError, setWebContainerError] = useState<string | null>(null);
+  const [isWebContainerLoading, setIsWebContainerLoading] = useState(true);
+
+  // Log estado do terminal para debug
+  useEffect(() => {
+    console.log('🖥️ Estado do terminal:', { showTerminal, activeTerminal, terminalCount, webContainerError });
+  }, [showTerminal, activeTerminal, terminalCount, webContainerError]);
+
+  // Verificar disponibilidade do WebContainer
+  useEffect(() => {
+    webcontainer
+      .then(() => {
+        console.log('✅ WebContainer disponível');
+        setIsWebContainerLoading(false);
+        setWebContainerError(null);
+      })
+      .catch((error) => {
+        console.error('❌ WebContainer não disponível:', error);
+        setIsWebContainerLoading(false);
+        setWebContainerError(error.message || 'WebContainer não suportado neste ambiente');
+      });
+  }, []);
 
   const addTerminal = () => {
     if (terminalCount < MAX_TERMINALS) {
@@ -182,7 +206,9 @@ export const TerminalTabs = memo(() => {
                 </React.Fragment>
               );
             })}
-            {terminalCount < MAX_TERMINALS && <IconButton icon="i-ph:plus" size="md" onClick={addTerminal} />}
+            {terminalCount < MAX_TERMINALS && !webContainerError && !isWebContainerLoading && (
+              <IconButton icon="i-ph:plus" size="md" onClick={addTerminal} />
+            )}
             <IconButton
               className="ml-auto"
               icon="i-ph:caret-down"
@@ -191,45 +217,62 @@ export const TerminalTabs = memo(() => {
               onClick={() => workbenchStore.toggleTerminal(false)}
             />
           </div>
-          {Array.from({ length: terminalCount + 1 }, (_, index) => {
-            const isActive = activeTerminal === index;
+          {isWebContainerLoading ? (
+            <div className="h-full flex items-center justify-center bg-bolt-elements-terminals-background">
+              <div className="text-center">
+                <div className="i-ph:spinner animate-spin text-2xl text-bolt-elements-textSecondary mb-2" />
+                <p className="text-bolt-elements-textSecondary text-sm">Carregando WebContainer...</p>
+              </div>
+            </div>
+          ) : webContainerError ? (
+            <TerminalFallback reason={webContainerError} onDiagnostic={() => window.open('/diagnostic', '_blank')} />
+          ) : (
+            Array.from({ length: terminalCount + 1 }, (_, index) => {
+              const isActive = activeTerminal === index;
 
-            logger.debug(`Starting bolt terminal [${index}]`);
+              logger.debug(`Starting bolt terminal [${index}]`);
 
-            if (index == 0) {
-              return (
-                <Terminal
-                  key={index}
-                  id={`terminal_${index}`}
-                  className={classNames('h-full overflow-hidden modern-scrollbar-invert', {
-                    hidden: !isActive,
-                  })}
-                  ref={(ref) => {
-                    terminalRefs.current.push(ref);
-                  }}
-                  onTerminalReady={(terminal) => workbenchStore.attachBoltTerminal(terminal)}
-                  onTerminalResize={(cols, rows) => workbenchStore.onTerminalResize(cols, rows)}
-                  theme={theme}
-                />
-              );
-            } else {
-              return (
-                <Terminal
-                  key={index}
-                  id={`terminal_${index}`}
-                  className={classNames('modern-scrollbar h-full overflow-hidden', {
-                    hidden: !isActive,
-                  })}
-                  ref={(ref) => {
-                    terminalRefs.current.push(ref);
-                  }}
-                  onTerminalReady={(terminal) => workbenchStore.attachTerminal(terminal)}
-                  onTerminalResize={(cols, rows) => workbenchStore.onTerminalResize(cols, rows)}
-                  theme={theme}
-                />
-              );
-            }
-          })}
+              if (index == 0) {
+                return (
+                  <Terminal
+                    key={index}
+                    id={`terminal_${index}`}
+                    className={classNames('h-full overflow-hidden modern-scrollbar-invert', {
+                      hidden: !isActive,
+                    })}
+                    ref={(ref) => {
+                      terminalRefs.current.push(ref);
+                    }}
+                    onTerminalReady={(terminal) => {
+                      console.log('🎯 Bolt terminal pronto, anexando...');
+                      workbenchStore.attachBoltTerminal(terminal);
+                    }}
+                    onTerminalResize={(cols, rows) => workbenchStore.onTerminalResize(cols, rows)}
+                    theme={theme}
+                  />
+                );
+              } else {
+                return (
+                  <Terminal
+                    key={index}
+                    id={`terminal_${index}`}
+                    className={classNames('modern-scrollbar h-full overflow-hidden', {
+                      hidden: !isActive,
+                    })}
+                    ref={(ref) => {
+                      terminalRefs.current.push(ref);
+                    }}
+                    onTerminalReady={(terminal) => {
+                      console.log('🎯 Terminal adicional pronto, anexando...');
+                      workbenchStore.attachTerminal(terminal);
+                    }}
+                    onTerminalResize={(cols, rows) => workbenchStore.onTerminalResize(cols, rows)}
+                    theme={theme}
+                  />
+                );
+              }
+            })
+          )}
         </div>
       </div>
     </Panel>
