@@ -36,17 +36,34 @@ export const TerminalTabs = memo(() => {
 
   // Verificar disponibilidade do WebContainer
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    // Timeout de fallback - se não resolver em 10 segundos, assumir erro
+    timeoutId = setTimeout(() => {
+      console.warn('⏰ WebContainer demorou mais de 10 segundos - assumindo erro');
+      setIsWebContainerLoading(false);
+      setWebContainerError('WebContainer demorou muito para inicializar. Verifique o console para mais detalhes.');
+    }, 10000);
+    
     webcontainer
       .then(() => {
         console.log('✅ WebContainer disponível');
+        clearTimeout(timeoutId);
         setIsWebContainerLoading(false);
         setWebContainerError(null);
       })
       .catch((error) => {
         console.error('❌ WebContainer não disponível:', error);
+        clearTimeout(timeoutId);
         setIsWebContainerLoading(false);
         setWebContainerError(error.message || 'WebContainer não suportado neste ambiente');
       });
+      
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   const addTerminal = () => {
@@ -219,9 +236,13 @@ export const TerminalTabs = memo(() => {
           </div>
           {isWebContainerLoading ? (
             <div className="h-full flex items-center justify-center bg-bolt-elements-terminals-background">
-              <div className="text-center">
+              <div className="text-center max-w-md p-4">
                 <div className="i-ph:spinner animate-spin text-2xl text-bolt-elements-textSecondary mb-2" />
-                <p className="text-bolt-elements-textSecondary text-sm">Carregando WebContainer...</p>
+                <p className="text-bolt-elements-textSecondary text-sm mb-2">Carregando WebContainer...</p>
+                <p className="text-bolt-elements-textTertiary text-xs">
+                  Verificando compatibilidade do navegador e inicializando ambiente de terminal.
+                  Se demorar muito, verifique o console do navegador para detalhes.
+                </p>
               </div>
             </div>
           ) : webContainerError ? (
