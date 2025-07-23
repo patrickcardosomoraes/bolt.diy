@@ -22,8 +22,9 @@ export let webcontainer: Promise<WebContainer> = new Promise(() => {
 if (!import.meta.env.SSR) {
   // Quick compatibility check
   console.log('🔍 Verificando compatibilidade do WebContainer...');
+
   const compatibilityResult = quickCompatibilityCheck();
-  
+
   console.log('📊 Resultado da verificação:', compatibilityResult);
 
   if (!compatibilityResult.isSupported) {
@@ -37,32 +38,36 @@ if (!import.meta.env.SSR) {
     webcontainer =
       import.meta.hot?.data.webcontainer ??
       Promise.race([
-        Promise.resolve()
-          .then(async () => {
-            console.log('🚀 Iniciando WebContainer...');
-            console.log('⚙️ Configurações do boot:', {
+        Promise.resolve().then(async () => {
+          console.log('🚀 Iniciando WebContainer...');
+          console.log('⚙️ Configurações do boot:', {
+            coep: 'credentialless',
+            workdirName: WORK_DIR_NAME,
+            forwardPreviewErrors: true,
+          });
+
+          try {
+            const webcontainerInstance = await WebContainer.boot({
               coep: 'credentialless',
               workdirName: WORK_DIR_NAME,
-              forwardPreviewErrors: true
+              forwardPreviewErrors: true, // Enable error forwarding from iframes
             });
-            
-            try {
-              const webcontainerInstance = await WebContainer.boot({
-                coep: 'credentialless',
-                workdirName: WORK_DIR_NAME,
-                forwardPreviewErrors: true, // Enable error forwarding from iframes
-              });
-              console.log('✅ WebContainer.boot() concluído');
-              return webcontainerInstance;
-            } catch (error) {
-              console.error('❌ Erro no WebContainer.boot():', error);
-              throw error;
-            }
-          }),
+            console.log('✅ WebContainer.boot() concluído');
+
+            return webcontainerInstance;
+          } catch (error) {
+            console.error('❌ Erro no WebContainer.boot():', error);
+            throw error;
+          }
+        }),
+
         // Timeout de 30 segundos
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout: WebContainer demorou mais de 30 segundos para inicializar')), 30000)
-        )
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Timeout: WebContainer demorou mais de 30 segundos para inicializar')),
+            30000,
+          ),
+        ),
       ])
         .then(async (webcontainer) => {
           console.log('✅ WebContainer inicializado com sucesso');

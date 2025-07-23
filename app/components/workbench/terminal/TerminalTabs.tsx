@@ -36,15 +36,13 @@ export const TerminalTabs = memo(() => {
 
   // Verificar disponibilidade do WebContainer
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
     // Timeout de fallback - se não resolver em 10 segundos, assumir erro
-    timeoutId = setTimeout(() => {
+    const timeoutId: NodeJS.Timeout = setTimeout(() => {
       console.warn('⏰ WebContainer demorou mais de 10 segundos - assumindo erro');
       setIsWebContainerLoading(false);
       setWebContainerError('WebContainer demorou muito para inicializar. Verifique o console para mais detalhes.');
     }, 10000);
-    
+
     webcontainer
       .then(() => {
         console.log('✅ WebContainer disponível');
@@ -58,7 +56,7 @@ export const TerminalTabs = memo(() => {
         setIsWebContainerLoading(false);
         setWebContainerError(error.message || 'WebContainer não suportado neste ambiente');
       });
-      
+
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -240,8 +238,8 @@ export const TerminalTabs = memo(() => {
                 <div className="i-ph:spinner animate-spin text-2xl text-bolt-elements-textSecondary mb-2" />
                 <p className="text-bolt-elements-textSecondary text-sm mb-2">Carregando WebContainer...</p>
                 <p className="text-bolt-elements-textTertiary text-xs">
-                  Verificando compatibilidade do navegador e inicializando ambiente de terminal.
-                  Se demorar muito, verifique o console do navegador para detalhes.
+                  Verificando compatibilidade do navegador e inicializando ambiente de terminal. Se demorar muito,
+                  verifique o console do navegador para detalhes.
                 </p>
               </div>
             </div>

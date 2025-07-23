@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { quickCompatibilityCheck } from '~/lib/webcontainer/quick-check';
 
 interface DiagnosticResult {
   name: string;
@@ -14,6 +15,16 @@ export default function Diagnostic() {
     setIsRunning(true);
 
     const diagnostics: DiagnosticResult[] = [];
+
+    // Use quick compatibility check first
+    const compatCheck = quickCompatibilityCheck();
+
+    // Test 0: Browser Detection
+    diagnostics.push({
+      name: 'Navegador Detectado',
+      status: 'success',
+      message: `${compatCheck.details.browser} - UserAgent: ${navigator.userAgent}`,
+    });
 
     // Test 1: Basic browser APIs
     try {
@@ -61,7 +72,55 @@ export default function Diagnostic() {
       });
     }
 
-    // Test 4: Environment detection
+    // Test 4: Cross-Origin Isolation (crucial for Safari)
+    try {
+      const isCrossOriginIsolated = typeof crossOriginIsolated !== 'undefined' ? crossOriginIsolated : false;
+      diagnostics.push({
+        name: 'Cross-Origin Isolation',
+        status: isCrossOriginIsolated ? 'success' : 'error',
+        message: isCrossOriginIsolated
+          ? 'Cross-Origin Isolation habilitado'
+          : 'Cross-Origin Isolation desabilitado - necessário para SharedArrayBuffer',
+      });
+    } catch (error) {
+      diagnostics.push({
+        name: 'Cross-Origin Isolation',
+        status: 'error',
+        message: `Erro ao verificar: ${error}`,
+      });
+    }
+
+    // Test 5: Safari-specific checks
+    if (compatCheck.details.isSafari) {
+      try {
+        const safariVersion =
+          typeof compatCheck.details.safariVersion === 'number' ? compatCheck.details.safariVersion : 0;
+        diagnostics.push({
+          name: 'Versão do Safari',
+          status: safariVersion >= 15 ? 'success' : 'warning',
+          message:
+            safariVersion >= 15
+              ? `Safari ${safariVersion} - versão suportada`
+              : `Safari ${safariVersion} - recomendado versão 15+`,
+        });
+
+        // Check Safari-specific features
+        const hasPrivateClickMeasurement = 'attribution' in navigator;
+        diagnostics.push({
+          name: 'Recursos Safari Modernos',
+          status: hasPrivateClickMeasurement ? 'success' : 'warning',
+          message: hasPrivateClickMeasurement ? 'Safari com recursos modernos' : 'Safari pode estar desatualizado',
+        });
+      } catch (error) {
+        diagnostics.push({
+          name: 'Verificação Safari',
+          status: 'error',
+          message: `Erro ao verificar Safari: ${error}`,
+        });
+      }
+    }
+
+    // Test 6: Environment detection
     try {
       const userAgent = navigator.userAgent;
       const isCloudflareWorker = userAgent.includes('CloudFlareWorker');
@@ -80,7 +139,7 @@ export default function Diagnostic() {
       });
     }
 
-    // Test 5: WebContainer import
+    // Test 7: WebContainer import
     try {
       const { WebContainer } = await import('@webcontainer/api');
       diagnostics.push({
@@ -89,7 +148,7 @@ export default function Diagnostic() {
         message: 'Módulo importado com sucesso',
       });
 
-      // Test 6: WebContainer boot
+      // Test 8: WebContainer boot
       try {
         console.log('🧪 Tentando inicializar WebContainer...');
 
@@ -104,7 +163,7 @@ export default function Diagnostic() {
           message: 'WebContainer inicializado com sucesso!',
         });
 
-        // Test 7: Basic file operations
+        // Test 9: Basic file operations
         try {
           await webcontainer.fs.writeFile('/test.txt', 'Hello World');
 
@@ -123,7 +182,7 @@ export default function Diagnostic() {
           });
         }
 
-        // Test 8: Terminal spawn
+        // Test 10: Terminal spawn
         try {
           const process = await webcontainer.spawn('echo', ['Teste terminal']);
           await process.output;
@@ -196,13 +255,35 @@ export default function Diagnostic() {
       </div>
 
       {results.length > 0 && (
-        <div className="mt-6 p-4 bg-gray-50 rounded">
-          <h3 className="font-semibold mb-2">Resumo:</h3>
-          <p>
-            ✅ Sucessos: {results.filter((r) => r.status === 'success').length} | ⚠️ Avisos:{' '}
-            {results.filter((r) => r.status === 'warning').length} | ❌ Erros:{' '}
-            {results.filter((r) => r.status === 'error').length}
-          </p>
+        <div className="mt-6 space-y-4">
+          <div className="p-4 bg-gray-50 rounded">
+            <h3 className="font-semibold mb-2">Resumo:</h3>
+            <p>
+              ✅ Sucessos: {results.filter((r) => r.status === 'success').length} | ⚠️ Avisos:{' '}
+              {results.filter((r) => r.status === 'warning').length} | ❌ Erros:{' '}
+              {results.filter((r) => r.status === 'error').length}
+            </p>
+          </div>
+
+          {navigator.userAgent.includes('Safari') && (
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
+              <h3 className="font-semibold mb-2 text-yellow-800">⚠️ Usuário Safari Detectado</h3>
+              <div className="text-sm text-yellow-700 space-y-2">
+                <p>
+                  <strong>Problemas conhecidos do Safari:</strong>
+                </p>
+                <ul className="list-disc ml-5 space-y-1">
+                  <li>SharedArrayBuffer pode não funcionar sem headers COOP/COEP corretos</li>
+                  <li>Cross-Origin Isolation é mais rigorosa que outros navegadores</li>
+                  <li>Alguns recursos WebAssembly podem ter limitações</li>
+                </ul>
+                <p>
+                  <strong>Recomendação:</strong> Para melhor compatibilidade com WebContainer, use Chrome, Firefox ou
+                  Edge.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
